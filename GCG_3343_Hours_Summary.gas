@@ -1,0 +1,767 @@
+Program.Sub.ScreenSU.Start
+gui.SS_Form1..create
+gui.SS_Form1..caption("Hours Summary report")
+gui.SS_Form1..size(5020,2995)
+gui.SS_Form1..position(0,0)
+gui.SS_Form1..event(unload,Unload)
+gui.SS_Form1..alwaysontop(False)
+gui.SS_Form1..fontname("Arial")
+gui.SS_Form1..fontsize(8)
+gui.SS_Form1..forecolor(0)
+gui.SS_Form1..fontstyle(,,,,)
+gui.SS_Form1..BackColor(-2147483633)
+gui.SS_Form1..controlbox(True)
+gui.SS_Form1..maxbutton(False)
+gui.SS_Form1..minbutton(False)
+gui.SS_Form1..mousepointer(0)
+gui.SS_Form1..moveable(True)
+gui.SS_Form1..sizeable(False)
+gui.SS_Form1..ShowInTaskBar(True)
+gui.SS_Form1..titlebar(True)
+gui.SS_Form1.lbl_dtpFrom.create(label,"From",True,1800,200,1,100,135,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.dtpFrom.create(datepicker)
+gui.SS_Form1.dtpFrom.visible(True)
+gui.SS_Form1.dtpFrom.size(1800,345)
+gui.SS_Form1.dtpFrom.zorder(0)
+gui.SS_Form1.dtpFrom.position(100,335)
+gui.SS_Form1.dtpFrom.enabled(True)
+gui.SS_Form1.dtpFrom.checkbox(False)
+gui.SS_Form1.lbl_dtpTo.create(label,"To",True,1800,200,1,1985,135,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.dtpTo.create(datepicker)
+gui.SS_Form1.dtpTo.visible(True)
+gui.SS_Form1.dtpTo.size(1800,345)
+gui.SS_Form1.dtpTo.zorder(0)
+gui.SS_Form1.dtpTo.position(1985,335)
+gui.SS_Form1.dtpTo.enabled(True)
+gui.SS_Form1.dtpTo.checkbox(False)
+gui.SS_Form1.lbl_txtFrom.create(label,"Employee from:",True,1800,200,1,100,850,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.txtFrom.create(textbox,"",True,1800,330,0,100,1050,True,0,Arial,8,16777215,1)
+gui.SS_Form1.txtFrom.event(lostfocus,txtfrom_lostfocus)
+gui.SS_Form1.cmd_txtFrom.create(button)
+gui.SS_Form1.cmd_txtFrom.caption("^")
+gui.SS_Form1.cmd_txtFrom.visible(True)
+gui.SS_Form1.cmd_txtFrom.size(330,330)
+gui.SS_Form1.cmd_txtFrom.zorder(0)
+gui.SS_Form1.cmd_txtFrom.position(1985,1050)
+gui.SS_Form1.cmd_txtFrom.enabled(True)
+gui.SS_Form1.cmd_txtFrom.fontname("Arial")
+gui.SS_Form1.cmd_txtFrom.fontsize(8)
+gui.SS_Form1.cmd_txtFrom.event(click,cmd_txtfrom_click)
+gui.SS_Form1.lbl_txtTo.create(label,"Employee to:",True,1800,200,1,2455,850,True,0,Arial,8,-2147483633,0)
+gui.SS_Form1.txtTo.create(textbox,"",True,1800,330,0,2455,1050,True,0,Arial,8,16777215,1)
+gui.SS_Form1.cmd_txtTo.create(button)
+gui.SS_Form1.cmd_txtTo.caption("^")
+gui.SS_Form1.cmd_txtTo.visible(True)
+gui.SS_Form1.cmd_txtTo.size(330,330)
+gui.SS_Form1.cmd_txtTo.zorder(0)
+gui.SS_Form1.cmd_txtTo.position(4340,1050)
+gui.SS_Form1.cmd_txtTo.enabled(True)
+gui.SS_Form1.cmd_txtTo.fontname("Arial")
+gui.SS_Form1.cmd_txtTo.fontsize(8)
+gui.SS_Form1.cmd_txtTo.event(click,cmd_txtto_click)
+gui.SS_Form1.chkAll.create(checkbox)
+gui.SS_Form1.chkAll.caption("All Employees")
+gui.SS_Form1.chkAll.visible(True)
+gui.SS_Form1.chkAll.size(1800,300)
+gui.SS_Form1.chkAll.zorder(0)
+gui.SS_Form1.chkAll.position(100,1550)
+gui.SS_Form1.chkAll.enabled(True)
+gui.SS_Form1.chkAll.alignment(0)
+gui.SS_Form1.chkAll.fontname("Arial")
+gui.SS_Form1.chkAll.fontsize(8)
+gui.SS_Form1.chkAll.event(click,chkall_click)
+gui.SS_Form1.cmdOk.create(button)
+gui.SS_Form1.cmdOk.caption("Print")
+gui.SS_Form1.cmdOk.visible(True)
+gui.SS_Form1.cmdOk.size(1000,360)
+gui.SS_Form1.cmdOk.zorder(0)
+gui.SS_Form1.cmdOk.position(100,2020)
+gui.SS_Form1.cmdOk.enabled(True)
+gui.SS_Form1.cmdOk.fontname("Arial")
+gui.SS_Form1.cmdOk.fontsize(8)
+gui.SS_Form1.cmdOk.event(click,cmdok_click)
+
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Variable.Global.dtpFrom.Declare(String)
+Variable.Global.dtpTo.Declare(String)
+Variable.UDT.uHoliday.Define("Date",String)
+Variable.UDT.uHoliday.Define("Hours",String)
+Variable.uGlobal.uHoliday.Declare("uHoliday")
+Variable.UDT.uEmployee.Define("Employee",String,EMPLOYEE)
+Variable.UDT.uEmployee.Define("Name",String,NAME)
+Variable.UDT.uEmployee.Define("Shift",String,SHIFT)
+Variable.UDT.uEmployee.Define("PR_Not_Elig_Hol",String,PR_NOT_ELIG_HOL)
+Variable.UDT.uEmployee.Define("Elig_Hol_Date",String,ELIG_HOL_DATE)
+Variable.UDT.uEmployee.Define("Hours_Worked",String)
+Variable.UDT.uEmployee.Define("Rate_Type",String)
+Variable.UDT.uEmployee.Define("Earnings_Code",String)
+Variable.UDT.uEmployee.Define("Dept",String,Dept_Employee)
+Variable.UDT.uEmployee.Define("BalancingGroup",String,PR_BALANCE_GROUP)
+Variable.uGlobal.uEmployee.Declare("uEmployee")
+Variable.Global.sEmployee.Declare(String)
+Variable.UDT.uReport.Define("Terminal",String,TERMINAL)
+Variable.UDT.uReport.Define("Employee",String,EMPLOYEE)
+Variable.UDT.uReport.Define("Name",String,EMPLOYEE_NAME)
+Variable.UDT.uReport.Define("Shift",String,SHIFT)
+Variable.UDT.uReport.Define("Dept",String,DEPT_EMPLOYEE)
+Variable.UDT.uReport.Define("Hours",String,HOURS)
+Variable.UDT.uReport.Define("Type",String,TYPE)
+Variable.UDT.uReport.Define("EC",String,EC)
+Variable.UDT.uReport.Define("Description",String,DESCRIPTION)
+Variable.UDT.uReport.Define("Reason",String,REASON)
+Variable.UDT.uReport.Define("BalanceGroup",String,BALANCING_GROUP)
+Variable.uGlobal.uReport.Declare("uReport")
+Variable.UDT.uEC.Define("Employee",String)
+Variable.UDT.uEC.Define("Earning_Code",String)
+Variable.UDT.uEC.Define("TotalHours_HH",Float)
+Variable.UDT.uEC.Define("ECDescr",String)
+Variable.uGlobal.uEC.Declare("uEC")
+Variable.UDT.uWeek.Define("WeekRange",String)
+Variable.uGlobal.uWeek.Declare("uWeek")
+Variable.UDT.uECDescr.Define("Codes",String)
+Variable.uGlobal.uECDescr.Declare("uECDescr")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+F.ODBC.Connection!con.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+'Gui.SS_Form1.dtpFrom.Value("2013-02-01")
+'Gui.SS_Form1.dtpTo.Value("2013-02-28")
+Gui.SS_Form1..Show
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3343_Hours_Summary.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+Program.Sub.Unload.Start
+
+
+F.Intrinsic.Debug.Stop
+
+F.ODBC.Connection!con.Close
+F.Intrinsic.Control.End
+
+Program.Sub.Unload.End
+
+program.sub.cmd_txtfrom_click.start
+F.Intrinsic.Control.SetErrorHandler("cmd_txtfrom_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sSQL.Declare(String)
+V.Local.sRet.Declare(String)
+
+F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+F.Intrinsic.UI.Browser(51,"",V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+	Gui.SS_Form1.chkAll.Value(0)
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	Gui.SS_Form1.txtFrom.Text(V.Local.sRet(0).Trim)
+	Gui.SS_Form1.txtTo.Text(V.Local.sRet(0).Trim)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmd_txtfrom_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3343_Hours_Summary.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmd_txtfrom_click.End
+
+program.sub.cmd_txtto_click.start
+F.Intrinsic.Control.SetErrorHandler("cmd_txtto_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sSQL.Declare(String)
+V.Local.sRet.Declare(String)
+
+F.Intrinsic.UI.SetBrowserHotTypeAhead(True)
+F.Intrinsic.UI.Browser(51,"",V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+	Gui.SS_Form1.chkAll.Value(0)
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	Gui.SS_Form1.txtTo.Text(V.Local.sRet(0).Trim)
+
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmd_txtto_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3343_Hours_Summary.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmd_txtto_click.End
+
+program.sub.cmdok_click.start
+F.Intrinsic.Control.SetErrorHandler("cmdok_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sSQL.Declare(String)
+V.Local.sTemp.Declare(String)
+V.Local.i.Declare(Long)
+V.Local.iA.Declare(Long)
+V.Local.iB.Declare(Long)
+V.Local.iUB.Declare(Long)
+V.Local.sHoursMM.Declare(String)
+V.Local.sHoursHH.Declare(String)
+V.Local.sTotal.Declare(String)
+V.Local.sRegular.Declare(String)
+V.Local.sOT.Declare(String)
+V.Local.sWeek.Declare(String)
+V.Local.sHoldHoliday.Declare(String)
+V.Local.sHoldPTO.Declare(String)
+V.Local.sHoldRegular.Declare(String)
+V.Local.sHoldOT.Declare(String)
+V.Local.sSumHoursWorked.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.sVacation.Declare(String)
+V.Local.sTotalHol.Declare(String)
+V.uGlobal.uEmployee.Redim(-1,-1)
+V.uGlobal.uReport.Redim(-1,-1)
+V.Local.iUB.Set(-1)
+
+F.Intrinsic.Control.If(V.Screen.SS_Form1!chkAll.Value,<>,1)
+	F.Intrinsic.Control.If(V.Screen.SS_Form1!txtFrom.Text,=,"")
+		F.Intrinsic.UI.Msgbox("Please select Employee Range or All Employees")
+		F.Intrinsic.Control.ExitSub
+	F.Intrinsic.Control.Else
+		F.Intrinsic.Control.If(V.Screen.SS_Form1!txtTo.Text,=,"")
+			F.Intrinsic.UI.Msgbox("Please select a Employee Range or All Employees")
+			F.Intrinsic.Control.ExitSub
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.UI.InvokeWaitDialog("Loading...","Please Wait...")
+V.Local.sSQL.Set("Delete From GCG_3343_Hours_Smry")
+F.ODBC.Connection!con.Execute(V.Local.sSQL)
+
+'date range
+F.Intrinsic.String.Format(V.Screen.SS_Form1!dtpFrom.Value,"yyyy-mm-dd",V.Global.dtpFrom)
+F.Intrinsic.String.Format(V.Screen.SS_Form1!dtpTo.Value,"yyyy-mm-dd",V.Global.dtpTo)
+
+'calculates each work week (Sun - Sat) within the date range in order to get a accurate total for Regular, overtime, PTO, and vacation hours within the actual date range.
+F.Intrinsic.Control.CallSub(Weeks)
+'calculates if a holiday exists within the date range
+F.Intrinsic.Control.CallSub(Holidaysched)
+'Earning Code (PTO/Unpaid PTO) reason
+F.Intrinsic.Control.CallSub(Pay_earn)
+
+'employee range - load employees to udt
+F.Intrinsic.Control.If(V.Screen.SS_Form1!chkAll.Value,=,1)
+	F.Intrinsic.String.Concat("Select Employee, Name, Shift, Dept_Employee, PR_Not_Elig_Hol, Elig_Hol_Date,PR_Balance_Group From V_Employee_Mstr where Date_Termination = '1900-01-01' and Dept_Employee <> 'MACH' and NAME <> 'INACTIVE'","",V.Local.sSQL)
+	V.Global.sEmployee.Set("All Employees")
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Concat("Select Employee, Name, Shift, Dept_Employee, PR_Not_Elig_Hol, Elig_Hol_Date,PR_Balance_Group From V_Employee_Mstr Where Employee between '",V.Screen.SS_Form1!txtFrom.Text,"' and '",V.Screen.SS_Form1!txtTo.Text,"' and Date_Termination = '1900-01-01' and Dept_Employee <> 'MACH' and NAME <> 'INACTIVE' Order by Employee",V.Local.sSQL)
+	F.Intrinsic.String.Concat(V.Screen.SS_Form1!txtFrom.Text," - ",V.Screen.SS_Form1!txtTo.Text,V.Global.sEmployee)
+F.Intrinsic.Control.EndIf
+F.ODBC.Connection!con.OpenRecordsetRO("rst",V.Local.sSQL)
+F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)
+	F.Intrinsic.Variable.LoadUDTFromRecordset("con","rst","v.uGlobal.uEmployee",True)
+F.Intrinsic.Control.EndIf
+F.ODBC.con!rst.Close
+F.Intrinsic.Variable.UDTMultiQuickSort(V.uGlobal.uEmployee!Employee,False)
+
+'loop thru employee range, and grab all data for each employee for each week.
+F.Intrinsic.Control.For(V.Local.i,V.uGlobal.uEmployee.LBound,V.uGlobal.uEmployee.UBound,1)
+	F.Intrinsic.UI.ChangeWaitStatus("Loading Employee data...",V.Local.i,V.uGlobal.uEmployee.LBound,V.uGlobal.uEmployee.UBound)
+	V.uGlobal.uEC.Redim(-1,-1)
+	V.Local.sSumHoursWorked.Set(0)
+	V.Local.sHoldRegular.Set(0)
+	V.Local.sHoldOT.Set(0)
+	V.Local.sTotalHol.Set(0)
+	'loop thru each week per employee to calculate the holidays, PTO, regular, and OT time.
+	F.Intrinsic.Control.For(V.Local.iA,V.uGlobal.uWeek.LBound,V.uGlobal.uWeek.UBound,1)
+		V.Local.sHoldHoliday.Set(0)
+		V.Local.sHoldPTO.Set(0)
+		'F.Intrinsic.Debug.InvokeDebugger
+		'F.Intrinsic.Debug.Stop
+		F.Intrinsic.String.Split(V.uGlobal.uWeek(v.Local.iA)!WeekRange,":",V.Local.sWeek)
+'=======Begin PAID Holidays
+		'Check for paid holidays, if employee is eliglble to receive a paid holiday, calulate holiday hours per week for a grand total at end of date range
+		F.Intrinsic.Control.If(V.uGlobal.uHoliday.UBound,<>,-1)
+			F.Intrinsic.Control.If(V.uGlobal.uEmployee(v.Local.i)!PR_Not_Elig_Hol,=,"N")
+				F.Intrinsic.Control.For(V.Local.iB,V.uGlobal.uHoliday.LBound,V.uGlobal.uHoliday.UBound,1)
+					F.Intrinsic.Control.If(V.uGlobal.uHoliday(v.Local.iB)!Date.PervasiveDate,>=,V.Local.sWeek(0))
+						F.Intrinsic.Control.If(V.uGlobal.uHoliday(v.Local.iB)!Date.PervasiveDate,<=,V.Local.sWeek(1))
+							F.Intrinsic.Control.If(V.uGlobal.uEmployee(v.Local.i)!Elig_Hol_Date,<=,V.uGlobal.uHoliday(v.Local.iB)!Date)
+								F.Intrinsic.Math.Add(V.Local.sTotalHol,V.uGlobal.uHoliday(v.Local.iB)!Hours,V.Local.sTotalHol)
+								F.Intrinsic.Math.Add(V.Local.sHoldHoliday,V.uGlobal.uHoliday(v.Local.iB)!Hours,V.Local.sHoldHoliday)
+							F.Intrinsic.Control.EndIf
+						F.Intrinsic.Control.EndIf
+					F.Intrinsic.Control.EndIf
+				F.Intrinsic.Control.Next(V.Local.iB)
+			F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.EndIf
+'========End paid holidays
+'========BeginPTO/UNpaids Days
+		'total hours_hh and Hours_mm for each earning code and to get the grand total PTO per week for a grand total for entire date range
+		'F.Intrinsic.String.Concat("Select DISTINCT(Earnings_Code) as Earnings_Code From V_TIME_ATTENDANCE Where Employee = '",V.uGlobal.uEmployee(v.Local.i)!Employee,"' and Rec_Type = 'A' and Charge_Date between '",V.Local.sWeek(0),"' and '",V.Local.sWeek(1),"' and Earnings_Code <> '' Order by Earnings_Code",V.Local.sSQL)
+		F.Intrinsic.String.Concat("Select * From V_TIME_ATTENDANCE Where Employee = '",V.uGlobal.uEmployee(v.Local.i)!Employee,"' and Rec_Type = 'A' and Charge_Date between '",V.Local.sWeek(0),"' and '",V.Local.sWeek(1),"' and Earnings_Code <> '' Order by Earnings_Code",V.Local.sSQL)
+		F.ODBC.Connection!con.OpenRecordsetRO("rst",V.Local.sSQL)
+		F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)
+			F.Intrinsic.Control.DoUntil(V.ODBC.con!rst.EOF,=,True)
+				F.Intrinsic.Variable.UDTMultiSeek(V.uGlobal.uEC!Employee,V.ODBC.con!rst.FieldValTrim!EMPLOYEE,V.uGlobal.uEC!Earning_Code,V.ODBC.con!rst.FieldValTrim!Earnings_Code,V.Local.sRet)
+				F.Intrinsic.Control.If(V.Local.sRet,<>,"")
+					V.Local.sTemp.Set(V.Local.sRet)
+				F.Intrinsic.Control.Else
+					V.Local.iUB.Set(V.uGlobal.uEC.UBound)
+					F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+					F.Intrinsic.Control.If(V.Local.iUB,=,0)
+						V.uGlobal.uEC.Redim(0,0)
+					F.Intrinsic.Control.Else
+						V.uGlobal.uEC.RedimPreserve(V.uGlobal.uEC.LBound,V.Local.iUB)
+					F.Intrinsic.Control.EndIf
+					V.uGlobal.uEC(v.Local.iUB)!Employee.Set(V.uGlobal.uEmployee(v.Local.i)!Employee)
+					V.Local.sTemp.Set(V.ODBC.con!rst.FieldValTrim!Earnings_Code)
+					V.uGlobal.uEC(v.Local.iUB)!Earning_Code.Set(V.Local.sTemp.Trim)
+					F.Intrinsic.Control.SelectCase(V.Local.sTemp)
+						F.Intrinsic.Control.Case("01")
+							V.uGlobal.uEC(v.Local.iUB)!ECDescr.Set(V.uGlobal.uECDescr(0)!Codes)
+						F.Intrinsic.Control.Case("02")
+							V.uGlobal.uEC(v.Local.iUB)!ECDescr.Set(V.uGlobal.uECDescr(1)!Codes)
+						F.Intrinsic.Control.Case("03")
+							V.uGlobal.uEC(v.Local.iUB)!ECDescr.Set(V.uGlobal.uECDescr(2)!Codes)
+						F.Intrinsic.Control.Case("04")
+							V.uGlobal.uEC(v.Local.iUB)!ECDescr.Set(V.uGlobal.uECDescr(3)!Codes)
+						F.Intrinsic.Control.Case("05")
+							V.uGlobal.uEC(v.Local.iUB)!ECDescr.Set(V.uGlobal.uECDescr(4)!Codes)
+						F.Intrinsic.Control.Case("06")
+							V.uGlobal.uEC(v.Local.iUB)!ECDescr.Set(V.uGlobal.uECDescr(5)!Codes)
+						F.Intrinsic.Control.Case("07")
+							V.uGlobal.uEC(v.Local.iUB)!ECDescr.Set(V.uGlobal.uECDescr(6)!Codes)
+						F.Intrinsic.Control.Case("08")
+							'holiday 08 should not exist since holidays are calculated in UDT  uHoliday
+							V.uGlobal.uEC(v.Local.iUB)!ECDescr.Set(V.uGlobal.uECDescr(7)!Codes)
+						F.Intrinsic.Control.Case("09")
+							V.uGlobal.uEC(v.Local.iUB)!ECDescr.Set(V.uGlobal.uECDescr(8)!Codes)
+						F.Intrinsic.Control.Case("10")
+							V.uGlobal.uEC(v.Local.iUB)!ECDescr.Set(V.uGlobal.uECDescr(9)!Codes)
+					F.Intrinsic.Control.EndSelect
+					V.Local.sTemp.Set(V.Local.iUB)
+				F.Intrinsic.Control.EndIf
+				V.Local.sHoursMM.Set(V.ODBC.con!rst.FieldValTrim!Hours_MM)
+				V.Local.sHoursHH.Set(V.ODBC.con!rst.FieldValTrim!HOURS_HH)
+				F.Intrinsic.Control.If(V.Local.sHoursMM,<>,0)
+					F.Intrinsic.Control.If(V.Local.sHoursMM,<>,"")
+						F.Intrinsic.Math.Div(V.Local.sHoursMM,60,V.Local.sHoursMM)
+						F.Intrinsic.Math.Add(V.uGlobal.uEC(v.Local.sTemp)!TotalHours_HH,V.Local.sHoursMM,V.uGlobal.uEC(v.Local.sTemp)!TotalHours_HH)
+						F.Intrinsic.Math.Add(V.Local.sHoldPTO,V.Local.sHoursMM,V.Local.sHoldPTO)
+					F.Intrinsic.Control.EndIf
+				F.Intrinsic.Control.EndIf
+				F.Intrinsic.Math.Add(V.Local.sHoldPTO,V.Local.sHoursHH,V.Local.sHoldPTO)
+				F.Intrinsic.Math.Add(V.uGlobal.uEC(v.Local.sTemp)!TotalHours_HH,V.Local.sHoursHH,V.uGlobal.uEC(v.Local.sTemp)!TotalHours_HH)
+				F.ODBC.con!rst.MoveNext
+			F.Intrinsic.Control.Loop
+		F.Intrinsic.Control.EndIf
+		F.ODBC.con!rst.Close
+'========End PTO Days
+'========Begin Regular and OT Hours
+		'sum hours worked per employee per week to calculate regular, and OT
+		F.Intrinsic.String.Concat("Select SUM(Hours_Worked) as HoursWorked From V_Job_Detail Where Empl = '",V.uGlobal.uEmployee(v.Local.i)!Employee,"' and LMO = 'L' and Balanced_As_Date between '",V.Local.sWeek(0),"' and '",V.Local.sWeek(1),"'",V.Local.sSQL)
+		F.ODBC.Connection!con.OpenRecordsetRO("rst",V.Local.sSQL)
+		F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)
+			V.Local.sSumHoursWorked.Set(V.ODBC.con!rst.FieldValTrim!HoursWorked)
+		F.Intrinsic.Control.EndIf
+		F.ODBC.con!rst.Close
+		F.Intrinsic.Math.Add(V.Local.sHoldHoliday,V.Local.sHoldPTO,V.Local.sVacation)
+		F.Intrinsic.Math.Add(V.Local.sVacation,V.Local.sSumHoursWorked,V.Local.sTotal)
+		F.Intrinsic.Control.If(V.Local.sTotal,>,40)
+			F.Intrinsic.Math.Sub(40,V.Local.sVacation,V.Local.sRegular)
+			F.Intrinsic.Math.Sub(V.Local.sSumHoursWorked,V.Local.sRegular,V.Local.sOT)
+			F.Intrinsic.Math.Add(V.Local.sHoldRegular,V.Local.sRegular,V.Local.sHoldRegular)
+			F.Intrinsic.Math.Add(V.Local.sHoldOT,V.Local.sOT,V.Local.sHoldOT)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.Math.Add(V.Local.sHoldRegular,V.Local.sSumHoursWorked,V.Local.sHoldRegular)
+			F.Intrinsic.Math.Add(V.Local.sHoldOT,0,V.Local.sHoldOT)
+		F.Intrinsic.Control.EndIf
+'========End Regular and OT Hours
+	F.Intrinsic.Control.Next(V.Local.iA)
+'===Write a individual record for the Regular, OT, Holiday, and PTO/Unpaid hours to the UDT
+	'F.Intrinsic.Control.CallSub(Write,"Reg",V.Local.sHoldRegular,"OT",V.Local.sHoldOT,"PTO",V.Local.sHoldPTO,"Hol",V.Local.sHoldHoliday,"i",V.Local.i)
+	F.Intrinsic.Control.CallSub(Write,"Reg",V.Local.sHoldRegular,"OT",V.Local.sHoldOT,"i",V.Local.i,"Hol",V.Local.sTotalHol)
+
+F.Intrinsic.Control.Next(V.Local.i)
+
+F.Intrinsic.Control.If(V.uGlobal.uReport.UBound,<>,-1)
+	F.ODBC.Connection!con.OpenRecordsetRW("rstSave","Select * From GCG_3343_Hours_Smry")
+	F.Intrinsic.Control.If(V.ODBC.con!rstSave.EOF,=,True)
+		f.Intrinsic.Variable.SaveUDTToRecordSet("con","rstSave","v.uGlobal.uReport")
+	F.Intrinsic.Control.EndIf
+	F.ODBC.con!rstSave.Close
+F.Intrinsic.Control.EndIf
+F.Intrinsic.UI.CloseWaitDialog
+F.Intrinsic.Control.CallSub(Report)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmdok_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3343_Hours_Summary.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmdok_click.End
+
+Program.Sub.Report.Start
+F.Intrinsic.Control.SetErrorHandler("Report_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.iRptID.Declare(Long)
+V.Local.sParam.Declare(String)
+V.Local.sParamVal.Declare(String)
+V.Local.sDateRange.Declare(String)
+
+F.Intrinsic.Debug.InvokeDebugger
+
+F.Intrinsic.Debug.Stop
+
+F.Intrinsic.String.Concat(V.Screen.SS_Form1!dtpFrom.Value," - ",V.Screen.SS_Form1!dtpTo.Value,V.Local.sDateRange)
+V.Local.sParam.Set("Terminal*!*DateRange*!*EmployeeRange")
+F.Intrinsic.String.Concat(V.Caller.Terminal,"*!*",V.Local.sDateRange,"*!*",V.Global.sEmployee,V.Local.sParamVal)
+F.Intrinsic.String.Split(V.Local.sParam,"*!*",V.Local.sParam)
+F.Intrinsic.String.Split(V.Local.sParamVal,"*!*",V.Local.sParamVal)
+F.Global.BI.GetIDFromName("GCG_3343_Hours_Summary.rpt",V.Local.iRptID)
+F.Global.BI.PrintReport(V.Local.iRptID,0,V.Local.sParam,V.Local.sParamVal,"",False)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Report_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3343_Hours_Summary.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Report.End
+
+Program.Sub.HolidaySched.Start
+F.Intrinsic.Control.SetErrorHandler("HolidaySched_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sSQL.Declare(String)
+V.Local.i.Declare(Long)
+V.Local.sTemp.Declare(String)
+V.Local.iUB.Declare(Long)
+V.Local.iDay.Declare(Long)
+V.uGlobal.uHoliday.Redim(-1,-1)
+V.Local.iUB.Set(-1)
+
+V.Local.sSQL.Set("Select * From V_HOLIDAY_SCHED")
+F.ODBC.Connection!con.OpenRecordsetRO("rst",V.Local.sSQL)
+F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)
+	F.Intrinsic.Control.For(V.Local.i,1,30,1)
+		F.Intrinsic.UI.ChangeWaitStatus("Loading Holiday dates...",V.Local.i,1,30)
+		V.Local.sTemp.Set(V.ODBC.con!rst.FieldVal!HOLIDAY_[v.local.i])
+		F.Intrinsic.String.Format(V.Local.sTemp.PervasiveDate,"yyyy-mm-dd",V.Local.sTemp)
+		F.Intrinsic.Control.If(V.Local.sTemp,>=,V.Global.dtpFrom)
+			F.Intrinsic.Control.If(V.Local.sTemp,<=,V.Global.dtpTo)
+				F.Intrinsic.Date.Weekday(V.Local.sTemp,V.Local.iDay)
+				F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+				F.Intrinsic.Control.If(V.uGlobal.uHoliday.UBound,=,-1)
+					V.uGlobal.uHoliday.Redim(0,0)
+				F.Intrinsic.Control.Else
+					V.uGlobal.uHoliday.RedimPreserve(0,V.Local.iUB)
+				F.Intrinsic.Control.EndIf
+				V.uGlobal.uHoliday(v.Local.iUB)!Date.Set(V.ODBC.con!rst.FieldValTrim!HOLIDAY_[v.local.i])
+				F.Intrinsic.Control.If(V.Local.iDay,=,1)
+				'sunday
+				V.uGlobal.uHoliday(v.Local.iUB)!Hours.Set(V.ODBC.con!rst.FieldValTrim!SUNDAY)
+				F.Intrinsic.Control.Else
+					F.Intrinsic.Control.If(V.Local.iDay,=,7)
+						'saturday
+						V.uGlobal.uHoliday(v.Local.iUB)!Hours.Set(V.ODBC.con!rst.FieldValTrim!SATURDAY)
+					F.Intrinsic.Control.Else
+						'Mon - Fri, 2 - 6
+					V.uGlobal.uHoliday(v.Local.iUB)!Hours.Set(V.ODBC.con!rst.FieldValTrim!WEEKDAYS)
+					F.Intrinsic.Control.EndIf
+				F.Intrinsic.Control.Endif
+			F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.Next(V.Local.i)
+F.Intrinsic.Control.EndIf
+F.ODBC.con!rst.Close
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("HolidaySched_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3343_Hours_Summary.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.HolidaySched.End
+
+Program.Sub.Pay_Earn.Start
+F.Intrinsic.Control.SetErrorHandler("Pay_Earn_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sSQL.Declare(String)
+V.Local.i.Declare(Long)
+V.Local.sTemp.Declare(String)
+V.Local.iUB.Declare(Long)
+V.uGlobal.uECDescr.Redim(-1,-1)
+
+'earning codes description = GCG_3343_Hours_Summary.Description
+F.Intrinsic.String.Concat("Select * From V_PAY_EARN_1 where WSA_Type = 'EARN' and Rec_Number = '001'","",V.Local.sSQL)
+F.ODBC.Connection!con.OpenRecordsetRO("rst",V.Local.sSQL)
+F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)
+	F.Intrinsic.Control.For(V.Local.i,1,5,1)
+		F.Intrinsic.UI.ChangeWaitStatus("Loading Earning Codes...",V.Local.i,1,5)
+		V.Local.sTemp.Set(V.ODBC.con!rst.FieldValTrim!EARNINGS_DESC_[v.local.i])
+		V.Local.iUB.Set(V.uGlobal.uECDescr.UBound)
+		F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+		F.Intrinsic.Control.If(V.uGlobal.uECDescr.UBound,=,-1)
+			V.uGlobal.uECDescr.Redim(0,0)
+		F.Intrinsic.Control.Else
+			V.uGlobal.uECDescr.RedimPreserve(0,V.Local.iUB)
+		F.Intrinsic.Control.EndIf
+		V.uGlobal.uECDescr(v.Local.iUB)!Codes.Set(V.Local.sTemp)
+	F.Intrinsic.Control.Next(V.Local.i)
+F.Intrinsic.Control.EndIf
+F.ODBC.con!rst.Close
+
+'earning codes description 2 =  GCG_3343_Hours_Summary.Description
+F.Intrinsic.String.Concat("Select * From V_PAY_EARN_2 where WSA_Type = 'EARN' and Rec_Number = '002'","",V.Local.sSQL)
+F.ODBC.Connection!con.OpenRecordsetRO("rst",V.Local.sSQL)
+F.Intrinsic.Control.If(V.ODBC.con!rst.EOF,=,False)
+	F.Intrinsic.Control.For(V.Local.i,6,10,1)
+		F.Intrinsic.UI.ChangeWaitStatus("Loading Earning Codes...",V.Local.i,1,5)
+		V.Local.sTemp.Set(V.ODBC.con!rst.FieldValTrim!EARNINGS_DESC_[v.local.i])
+		V.Local.iUB.Set(V.uGlobal.uECDescr.UBound)
+		F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+		F.Intrinsic.Control.If(V.uGlobal.uECDescr.UBound,=,-1)
+			V.uGlobal.uECDescr.Redim(0,0)
+		F.Intrinsic.Control.Else
+			V.uGlobal.uECDescr.RedimPreserve(0,V.Local.iUB)
+		F.Intrinsic.Control.EndIf
+		V.uGlobal.uECDescr(v.Local.iUB)!Codes.Set(V.Local.sTemp)
+	F.Intrinsic.Control.Next(V.Local.i)
+F.Intrinsic.Control.EndIf
+F.ODBC.con!rst.Close
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Pay_Earn_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3343_Hours_Summary.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Pay_Earn.End
+
+program.sub.txtfrom_lostfocus.start
+
+Gui.SS_Form1.txtTo.Text(V.Screen.SS_Form1!txtFrom.Text)
+
+program.sub.txtfrom_lostfocus.End
+
+program.sub.chkall_click.start
+
+Gui.SS_Form1.txtFrom.Text("")
+Gui.SS_Form1.txtTo.Text("")
+
+
+program.sub.chkall_click.End
+
+Program.Sub.Weeks.Start
+F.Intrinsic.Control.SetErrorHandler("Weeks_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.bDate.Declare(Boolean,False)
+V.Local.sBegWeek.Declare(String)
+V.Local.sEndWeek.Declare(String)
+V.Local.iUB.Declare(Long)
+
+V.uGlobal.uWeek.Redim(-1,-1)
+V.Local.sBegWeek.Set(V.Global.dtpFrom)
+F.Intrinsic.Control.DoUntil(V.Local.bDate,=,True)
+	f.Intrinsic.Date.EndOfWeek(v.Local.sBegWeek,v.Local.sEndWeek)
+	F.Intrinsic.String.Format(V.Local.sEndWeek,"yyyy-mm-dd",V.Local.sEndWeek)
+	F.Intrinsic.Control.If(V.Local.sEndWeek,>=,V.Global.dtpTo)
+		V.Local.bDate.Set(True)
+		V.Local.sEndWeek.Set(V.Global.dtpTo)
+	F.Intrinsic.Control.EndIf
+	V.Local.iUB.Set(V.uGlobal.uWeek.UBound)
+	F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+	F.Intrinsic.Control.If(V.Local.iUB,=,0)
+		V.uGlobal.uWeek.Redim(0,0)
+	F.Intrinsic.Control.Else
+		V.uGlobal.uWeek.RedimPreserve(V.uGlobal.uWeek.LBound,V.Local.iUB)
+	F.Intrinsic.Control.EndIf
+	F.Intrinsic.String.Concat(V.Local.sBegWeek,":",V.Local.sEndWeek,V.uGlobal.uWeek(v.Local.iUB)!WeekRange)
+	F.Intrinsic.Date.DateAdd("D",1,V.Local.sEndWeek,V.Local.sBegWeek)
+	F.Intrinsic.String.Format(V.Local.sBegWeek,"yyyy-mm-dd",V.Local.sBegWeek)
+F.Intrinsic.Control.Loop
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Weeks_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3343_Hours_Summary.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Weeks.End
+
+Program.Sub.Write.Start
+F.Intrinsic.Control.SetErrorHandler("Write_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sHoliday.Declare(String)
+V.Local.sReg.Declare(String)
+V.Local.sOT.Declare(String)
+V.Local.iUB.Declare(Long)
+V.Local.i.Declare(Long)
+V.Local.iA.Declare(Long)
+V.Local.sReg.Set(V.Args.Reg)
+V.Local.sOT.Set(V.Args.OT)
+V.Local.sHoliday.Set(V.Args.Hol)
+V.Local.i.Set(V.Args.i)
+
+'Regular
+F.Intrinsic.Control.If(V.Local.sReg,<>,0)
+	V.Local.iUB.Set(V.uGlobal.uReport.UBound)
+	F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+	F.Intrinsic.Control.If(V.Local.iUB,=,0)
+		V.uGlobal.uReport.Redim(0,0)
+	F.Intrinsic.Control.Else
+		V.uGlobal.uReport.RedimPreserve(V.uGlobal.uReport.LBound,V.Local.iUB)
+	F.Intrinsic.Control.EndIf
+	V.uGlobal.uReport(v.Local.iUB)!Terminal.Set(V.Caller.Terminal)
+	V.uGlobal.uReport(v.Local.iUB)!Employee.Set(V.uGlobal.uEmployee(v.Local.i)!Employee)
+	V.uGlobal.uReport(v.Local.iUB)!Name.Set(V.uGlobal.uEmployee(v.Local.i)!Name)
+	V.uGlobal.uReport(v.Local.iUB)!Shift.Set(V.uGlobal.uEmployee(v.Local.i)!Shift)
+	V.uGlobal.uReport(v.Local.iUB)!Dept.Set(V.uGlobal.uEmployee(v.Local.i)!DEPT)
+	V.uGlobal.uReport(v.Local.iUB)!Hours.Set(V.Local.sReg)
+	V.uGlobal.uReport(v.Local.iUB)!Type.Set("RT")
+	V.uGlobal.uReport(v.Local.iUB)!EC.Set("")
+	V.uGlobal.uReport(v.Local.iUB)!Description.Set("Regular")
+	V.uGlobal.uReport(v.Local.iUB)!Reason.Set("")
+	V.uGlobal.uReport(v.Local.iUB)!BalanceGroup.Set(V.uGlobal.uEmployee(v.Local.i)!BalancingGroup)
+F.Intrinsic.Control.EndIf
+
+'OverTime
+F.Intrinsic.Control.If(V.Local.sOT,<>,0)
+	V.Local.iUB.Set(V.uGlobal.uReport.UBound)
+	F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+	F.Intrinsic.Control.If(V.Local.iUB,=,0)
+		V.uGlobal.uReport.Redim(0,0)
+	F.Intrinsic.Control.Else
+		V.uGlobal.uReport.RedimPreserve(V.uGlobal.uReport.LBound,V.Local.iUB)
+	F.Intrinsic.Control.EndIf
+	V.uGlobal.uReport(v.Local.iUB)!Terminal.Set(V.Caller.Terminal)
+	V.uGlobal.uReport(v.Local.iUB)!Employee.Set(V.uGlobal.uEmployee(v.Local.i)!Employee)
+	V.uGlobal.uReport(v.Local.iUB)!Name.Set(V.uGlobal.uEmployee(v.Local.i)!Name)
+	V.uGlobal.uReport(v.Local.iUB)!Shift.Set(V.uGlobal.uEmployee(v.Local.i)!Shift)
+	V.uGlobal.uReport(v.Local.iUB)!Dept.Set(V.uGlobal.uEmployee(v.Local.i)!DEPT)
+	V.uGlobal.uReport(v.Local.iUB)!Hours.Set(V.Local.sOT)
+	V.uGlobal.uReport(v.Local.iUB)!Type.Set("OT")
+	V.uGlobal.uReport(v.Local.iUB)!EC.Set("")
+	V.uGlobal.uReport(v.Local.iUB)!Description.Set("Overtime")
+	V.uGlobal.uReport(v.Local.iUB)!Reason.Set("")
+	V.uGlobal.uReport(v.Local.iUB)!BalanceGroup.Set(V.uGlobal.uEmployee(v.Local.i)!BalancingGroup)
+F.Intrinsic.Control.EndIf
+
+'PTO
+F.Intrinsic.Control.If(V.uGlobal.uEC.UBound,<>,-1)
+	F.Intrinsic.Control.For(V.Local.iA,V.uGlobal.uEC.LBound,V.uGlobal.uEC.UBound,1)
+		V.Local.iUB.Set(V.uGlobal.uReport.UBound)
+		F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+		F.Intrinsic.Control.If(V.Local.iUB,=,0)
+			V.uGlobal.uReport.Redim(0,0)
+		F.Intrinsic.Control.Else
+			V.uGlobal.uReport.RedimPreserve(V.uGlobal.uReport.LBound,V.Local.iUB)
+		F.Intrinsic.Control.EndIf
+		V.uGlobal.uReport(v.Local.iUB)!Terminal.Set(V.Caller.Terminal)
+		V.uGlobal.uReport(v.Local.iUB)!Employee.Set(V.uGlobal.uEmployee(v.Local.i)!Employee)
+		V.uGlobal.uReport(v.Local.iUB)!Name.Set(V.uGlobal.uEmployee(v.Local.i)!Name)
+		V.uGlobal.uReport(v.Local.iUB)!Shift.Set(V.uGlobal.uEmployee(v.Local.i)!Shift)
+		V.uGlobal.uReport(v.Local.iUB)!Dept.Set(V.uGlobal.uEmployee(v.Local.i)!DEPT)
+		V.uGlobal.uReport(v.Local.iUB)!Hours.Set(V.uGlobal.uEC(v.Local.iA)!TotalHours_HH)
+		V.uGlobal.uReport(v.Local.iUB)!Type.Set("EC")
+		V.uGlobal.uReport(v.Local.iUB)!EC.Set(V.uGlobal.uEC(v.Local.iA)!Earning_Code)
+		V.uGlobal.uReport(v.Local.iUB)!Description.Set(V.uGlobal.uEC(v.Local.iA)!ECDescr)
+		V.uGlobal.uReport(v.Local.iUB)!Reason.Set("")
+		V.uGlobal.uReport(v.Local.iUB)!BalanceGroup.Set(V.uGlobal.uEmployee(v.Local.i)!BalancingGroup)
+	F.Intrinsic.Control.Next(V.Local.iA)
+F.Intrinsic.Control.EndIf
+
+'Holiday
+F.Intrinsic.Control.If(V.Local.sHoliday.UBound,<>,-1)
+	F.Intrinsic.Control.If(V.Local.sHoliday,>,0)
+		V.Local.iUB.Set(V.uGlobal.uReport.UBound)
+		F.Intrinsic.Math.Add(V.Local.iUB,1,V.Local.iUB)
+		F.Intrinsic.Control.If(V.Local.iUB,=,0)
+			V.uGlobal.uReport.Redim(0,0)
+		F.Intrinsic.Control.Else
+			V.uGlobal.uReport.RedimPreserve(V.uGlobal.uReport.LBound,V.Local.iUB)
+		F.Intrinsic.Control.EndIf
+		V.uGlobal.uReport(v.Local.iUB)!Terminal.Set(V.Caller.Terminal)
+		V.uGlobal.uReport(v.Local.iUB)!Employee.Set(V.uGlobal.uEmployee(v.Local.i)!Employee)
+		V.uGlobal.uReport(v.Local.iUB)!Name.Set(V.uGlobal.uEmployee(v.Local.i)!Name)
+		V.uGlobal.uReport(v.Local.iUB)!Shift.Set(V.uGlobal.uEmployee(v.Local.i)!Shift)
+		V.uGlobal.uReport(v.Local.iUB)!Dept.Set(V.uGlobal.uEmployee(v.Local.i)!DEPT)
+		V.uGlobal.uReport(v.Local.iUB)!Hours.Set(V.Local.sHoliday)
+		V.uGlobal.uReport(v.Local.iUB)!Type.Set("EC")
+		V.uGlobal.uReport(v.Local.iUB)!EC.Set("HT")
+		V.uGlobal.uReport(v.Local.iUB)!Description.Set("Holiday")
+		'V.uGlobal.uReport(v.Local.iUB)!Reason.Set("Holiday")
+		V.uGlobal.uReport(v.Local.iUB)!BalanceGroup.Set(V.uGlobal.uEmployee(v.Local.i)!BalancingGroup)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Write_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3343_Hours_Summary.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Write.End
+
+Program.Sub.Comments.Start
+${$0$}$$}$$}$12:00:00 AM$}$False
+Program.Sub.Comments.End
